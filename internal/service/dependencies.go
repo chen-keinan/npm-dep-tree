@@ -1,0 +1,85 @@
+package service
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/chen-keinan/npm-dep-tree/internal/cache"
+	"github.com/chen-keinan/npm-dep-tree/pkg/model"
+	"go.uber.org/zap"
+	"net/http"
+	"strings"
+)
+
+//NpmRegistry npm registry url
+const NpmRegistry = "https://registry.npmjs.org/"
+
+//Dep is interface for dependencies resolver service
+//dependencies.go
+//go:generate mockgen -destination=../mocks/mock_Dep.go -package=mocks . Dep
+type Dep interface {
+	getNextDependency(pkgName string, pkgVersion string) (*model.NpmDependency, error)
+	fetchFromRegistry(pkgName string, pkgVersion string) (*model.NpmDependency, error)
+	ResolveDependencies(rootTree *model.DependencyTree) error
+	getLru() *cache.Lru
+}
+
+//Dependencies service struct
+type Dependencies struct {
+	log *zap.Logger
+	lru *cache.Lru
+}
+
+//NewDependencies create dependencies service instance
+func NewDependencies(zlog *zap.Logger, l *cache.Lru) Dep {
+	return &Dependencies{log: zlog, lru: l}
+}
+
+//ResolveDependencies resolve npm package dependency by name and version
+func (d Dependencies) ResolveDependencies(rootTree *model.DependencyTree) error {
+	npmDep, err := d.getNextDependency(rootTree.Name, rootTree.Version)
+	if err != nil {
+		return err
+	}
+	for name, version := range npmDep.Dependencies {
+		dep := &model.DependencyTree{Name: name, Version: strings.Trim(version, "^"), Dependencies: []*model.DependencyTree{}}
+		err := d.ResolveDependencies(dep)
+		if err == nil {
+			rootTree.Dependencies = append(rootTree.Dependencies, dep)
+		}
+	}
+	return nil
+}
+
+func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*model.NpmDependency, error) {
+	// check if npm pkg exist in cache
+	val, ok := d.lru.Get(fmt.Sprintf("%s:%s", pkgName, pkgVersion))
+	if ok {
+		return val.(*model.NpmDependency), nil
+	}
+	// if not fetch it from npm registry
+	npmDep, err := d.fetchFromRegistry(pkgName, pkgVersion)
+	if err != nil {
+		return npmDep, err
+	}
+	// add dependency to cache
+	d.lru.Add(fmt.Sprintf("%s:%s", pkgName, pkgVersion), &npmDep)
+	return npmDep, nil
+}
+
+func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*model.NpmDependency, error) {
+	resp, err := http.Get(fmt.Sprintf("%s/%s/%s", NpmRegistry, pkgName, pkgVersion))
+	var npmDep model.NpmDependency
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry: %s", err.Error())
+	}
+	defer resp.Body.Close()
+	err = json.NewDecoder(resp.Body).Decode(&npmDep)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode pakcge data: %s", err.Error())
+	}
+	return &npmDep, nil
+}
+
+func (d Dependencies) getLru() *cache.Lru {
+	return d.lru
+}
