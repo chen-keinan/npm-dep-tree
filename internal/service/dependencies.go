@@ -36,6 +36,7 @@ func NewDependencies(zlog *zap.Logger, l *cache.Lru) Dep {
 
 //ResolveDependencies resolve npm package dependency by name and version
 func (d Dependencies) ResolveDependencies(rootTree *model.DependencyTree) error {
+	d.log.Debug(fmt.Sprintf("fetching dependencies for pkg name %s and version %s", rootTree.Name, rootTree.Version))
 	npmDep, err := d.getNextDependency(rootTree.Name, rootTree.Version)
 	if err != nil {
 		return err
@@ -54,6 +55,7 @@ func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*mod
 	// check if npm pkg exist in cache
 	val, ok := d.lru.Get(fmt.Sprintf("%s:%s", pkgName, pkgVersion))
 	if ok {
+		d.log.Debug(fmt.Sprintf("resolving dependencies from cache for pkg name %s and version %s", pkgName, pkgVersion))
 		return val.(*model.NpmDependency), nil
 	}
 	// if not fetch it from npm registry
@@ -61,6 +63,7 @@ func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*mod
 	if err != nil {
 		return npmDep, err
 	}
+	d.log.Debug(fmt.Sprintf("resolving dependencies from registry for pkg name %s and version %s", pkgName, pkgVersion))
 	// add dependency to cache
 	d.lru.Add(fmt.Sprintf("%s:%s", pkgName, pkgVersion), &npmDep)
 	return npmDep, nil
@@ -72,7 +75,12 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry: %s", err.Error())
 	}
-	defer resp.Body.Close()
+	defer func() {
+		err := resp.Body.Close()
+		if err != nil {
+			d.log.Error("failed to close input steam")
+		}
+	}()
 	err = json.NewDecoder(resp.Body).Decode(&npmDep)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode pakcge data: %s", err.Error())
