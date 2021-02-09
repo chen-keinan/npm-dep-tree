@@ -1,3 +1,5 @@
 {
-  "httpPort": 8085
+  "httpPort": 8085,
+  "graphiteAddress": "127.0.0.1",
+  "graphitePort": "2003"
 }

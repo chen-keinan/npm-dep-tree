@@ -9,8 +9,12 @@ import (
 	"github.com/chen-keinan/npm-dep-tree/internal/logger"
 	"github.com/chen-keinan/npm-dep-tree/internal/router"
 	"github.com/chen-keinan/npm-dep-tree/internal/service"
+	"github.com/cyberdelia/go-metrics-graphite"
 	"github.com/gorilla/mux"
+	"github.com/rcrowley/go-metrics"
 	"go.uber.org/fx"
+	"net"
+
 	"go.uber.org/zap"
 	"net/http"
 	"time"
@@ -18,6 +22,8 @@ import (
 
 //RunNpmDepService invoke service
 func RunNpmDepService() {
+	// start graphite monitor
+	InitMonitor()
 	// create dependencies injection container
 	app := fx.New(
 		fx.Provide(logger.NewZapLogger),
@@ -49,15 +55,11 @@ func runHTTPServer(lifecycle fx.Lifecycle, routes *mux.Router, c *configs.Config
 	})
 }
 
-/*
-//StartSystemServices start health and metrics service
-func StartSystemServices() {
-	//http.Handle("/_/ping", handlers.HandleHealthCheck())
-	//http.Handle("/_/metrics.json", reporters.HandleMetricsJson())
-	adminPort := ":" + configs.GetStringValue("AdminPort")
-	log.Infof("Admin port: %s", adminPort)
-	if err := http.ListenAndServe(adminPort, nil); err != nil {
-		panic("failed to start health and metrics services")
+//InitMonitor start health and metrics service
+func InitMonitor() {
+	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:2003")
+	if err != nil {
+		panic("failed to start monitor")
 	}
+	go graphite.Graphite(metrics.DefaultRegistry, 10e9, "metrics", addr)
 }
-*/

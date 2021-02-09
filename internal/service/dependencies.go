@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/chen-keinan/npm-dep-tree/internal/cache"
 	"github.com/chen-keinan/npm-dep-tree/pkg/model"
+	"github.com/rcrowley/go-metrics"
 	"go.uber.org/zap"
 	"net/http"
 	"strings"
@@ -58,21 +59,31 @@ func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*mod
 		d.log.Debug(fmt.Sprintf("resolving dependencies from cache for pkg name %s and version %s", pkgName, pkgVersion))
 		return val.(*model.NpmDependency), nil
 	}
-	// if not fetch it from npm registry
-	npmDep, err := d.fetchFromRegistry(pkgName, pkgVersion)
+	t := metrics.GetOrRegisterTimer("account.create.latency", nil)
+	var npmDep *model.NpmDependency
+	var err error
+	t.Time(func() {
+		// if not fetch it from npm registry
+		npmDep, err = d.fetchFromRegistry(pkgName, pkgVersion)
+	})
+	t.Update(47)
 	if err != nil {
 		return npmDep, err
 	}
 	d.log.Debug(fmt.Sprintf("resolving dependencies from registry for pkg name %s and version %s", pkgName, pkgVersion))
 	// add dependency to cache
-	d.lru.Add(fmt.Sprintf("%s:%s", pkgName, pkgVersion), &npmDep)
+	d.lru.Add(fmt.Sprintf("%s:%s", pkgName, pkgVersion), npmDep)
 	return npmDep, nil
 }
 
 func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*model.NpmDependency, error) {
+	cSucceed := metrics.NewCounter()
+	cFailure := metrics.NewCounter()
 	resp, err := http.Get(fmt.Sprintf("%s/%s/%s", NpmRegistry, pkgName, pkgVersion))
 	var npmDep model.NpmDependency
 	if err != nil {
+		metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		cFailure.Inc(47)
 		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry: %s", err.Error())
 	}
 	defer func() {
@@ -83,8 +94,12 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 	}()
 	err = json.NewDecoder(resp.Body).Decode(&npmDep)
 	if err != nil {
+		metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		cFailure.Inc(47)
 		return nil, fmt.Errorf("failed to decode pakcge data: %s", err.Error())
 	}
+	metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.succeeded", pkgName, pkgVersion), cSucceed)
+	cSucceed.Inc(47)
 	return &npmDep, nil
 }
 

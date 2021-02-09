@@ -21,7 +21,7 @@ func NewMuxRouter() MuxRouter {
 }
 
 //RegisterRoutes instantiate new router
-func (r MuxRouter) RegisterRoutes(zlog *zap.Logger, depService *service.Dependencies) *mux.Router {
+func (r MuxRouter) RegisterRoutes(zlog *zap.Logger, depService service.Dep) *mux.Router {
 	dependenciesRouter := &routing.DependenciesRoutes{DependenciesHandler: handler.NewDependenciesHandler(zlog, depService),
 		SystemHandler: handler.NewSystemHandler(zlog)}
 	r.handlerBuilder(r.router, dependenciesRouter.DepRoutes())

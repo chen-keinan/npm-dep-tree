@@ -14,11 +14,11 @@ import (
 //Dependencies handler object
 type Dependencies struct {
 	log        *zap.Logger
-	depService *service.Dependencies
+	depService service.Dep
 }
 
 //NewDependenciesHandler return new dependencies handler instance
-func NewDependenciesHandler(zlog *zap.Logger, depService *service.Dependencies) *Dependencies {
+func NewDependenciesHandler(zlog *zap.Logger, depService service.Dep) *Dependencies {
 	return &Dependencies{log: zlog, depService: depService}
 }
 
