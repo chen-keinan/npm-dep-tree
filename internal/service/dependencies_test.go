@@ -33,6 +33,7 @@ func Test_ResolveDependenciesAddToCache(t *testing.T) {
 	assert.Equal(t, dt.Version, "2.0.1")
 	assert.Equal(t, len(dt.Dependencies), 1)
 	assert.Equal(t, dt.Dependencies[0].Name, "lodash")
+	assert.Equal(t, dt.Dependencies[0].Version, "4.8.0")
 }
 
 func Test_ResolveDependenciesFromCache(t *testing.T) {
@@ -44,4 +45,5 @@ func Test_ResolveDependenciesFromCache(t *testing.T) {
 	assert.Equal(t, dt.Version, "2.0.1")
 	assert.Equal(t, len(dt.Dependencies), 1)
 	assert.Equal(t, dt.Dependencies[0].Name, "lodash")
+	assert.Equal(t, dt.Dependencies[0].Version, "4.8.0")
 }
