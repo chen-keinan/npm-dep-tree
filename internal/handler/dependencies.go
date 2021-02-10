@@ -38,10 +38,10 @@ func (handler Dependencies) ResolveDependencies(w http.ResponseWriter, req *http
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusInternalServerError)
 	tree := asciitree.Tree{}
 	// build tree view
 	view.BuildTreeView(rootTree, &tree, "")
 	// render tree to ui
 	tree.Fprint(w, false, "")
+	w.WriteHeader(http.StatusOK)
 }

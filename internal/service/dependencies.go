@@ -59,7 +59,7 @@ func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*mod
 		d.log.Debug(fmt.Sprintf("resolving dependencies from cache for pkg name %s and version %s", pkgName, pkgVersion))
 		return val.(*model.NpmDependency), nil
 	}
-	t := metrics.GetOrRegisterTimer("account.create.latency", nil)
+	t := metrics.GetOrRegisterTimer("fetch.registry.dependency.latency", nil)
 	var npmDep *model.NpmDependency
 	var err error
 	t.Time(func() {
