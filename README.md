@@ -2,7 +2,7 @@
 
 this is an example project for resolving npm package with it package-dependencies
 
-example :http://localhost:8085/api/v1/package-dependencies/admin-lte/3.1.0-rc
+example : http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
 
 ```
 └ file-loader:6.2.0
