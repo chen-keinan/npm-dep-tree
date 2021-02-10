@@ -19,6 +19,7 @@ func Test_ResolveDependencies_OK(t *testing.T) {
 	zapLogger := logger.NewZapLogger()
 	sh := NewDependenciesHandler(zapLogger, service.NewDependencies(zapLogger, cache.NewLru()))
 	presolveRes, err := test.InvokeRequestWithResponse(req, sh.ResolveDependencies, path.Join(common.API, "package-dependencies/{name}/{version}"))
+	assert.NoError(t, err)
 	assert.True(t, presolveRes.Code == http.StatusOK)
 }
 
@@ -29,5 +30,6 @@ func Test_ResolveDependencies_BadRequest(t *testing.T) {
 	zapLogger := logger.NewZapLogger()
 	sh := NewDependenciesHandler(zapLogger, service.NewDependencies(zapLogger, cache.NewLru()))
 	presolveRes, err := test.InvokeRequestWithResponse(req, sh.ResolveDependencies, path.Join(common.API, "package-dependencies/{name}/{version}"))
+	assert.NoError(t, err)
 	assert.True(t, presolveRes.Code == http.StatusBadRequest)
 }

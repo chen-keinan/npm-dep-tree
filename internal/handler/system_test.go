@@ -16,5 +16,6 @@ func Test_Ping(t *testing.T) {
 	assert.NoError(t, err)
 	sh := NewSystemHandler(logger.NewZapLogger())
 	pingRes, err := test.InvokeRequestWithResponse(req, sh.Ping, path.Join(common.API, "ping"))
+	assert.NoError(t, err)
 	assert.True(t, pingRes.Code == 200)
 }

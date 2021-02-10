@@ -10,7 +10,6 @@ import (
 //Config wrapper for Viper (exposed to all project's packages)
 type Config struct {
 	*viper.Viper
-	log *zap.Logger
 }
 
 //InitConfig initializes the configuration for the service

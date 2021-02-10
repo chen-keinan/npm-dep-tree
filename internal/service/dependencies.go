@@ -82,7 +82,10 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 	resp, err := http.Get(fmt.Sprintf("%s/%s/%s", NpmRegistry, pkgName, pkgVersion))
 	var npmDep model.NpmDependency
 	if err != nil {
-		metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		err := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		if err != nil {
+			d.log.Error(fmt.Sprintf("fail to log fetch.package.registry.%s:%s.failure metric", pkgName, pkgVersion))
+		}
 		cFailure.Inc(47)
 		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry: %s", err.Error())
 	}
@@ -94,11 +97,17 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 	}()
 	err = json.NewDecoder(resp.Body).Decode(&npmDep)
 	if err != nil {
-		metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		err := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		if err != nil {
+			d.log.Error(fmt.Sprintf("fail to log fetch.package.registry.%s:%s.failure metric", pkgName, pkgVersion))
+		}
 		cFailure.Inc(47)
 		return nil, fmt.Errorf("failed to decode pakcge data: %s", err.Error())
 	}
-	metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.succeeded", pkgName, pkgVersion), cSucceed)
+	err = metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.succeeded", pkgName, pkgVersion), cSucceed)
+	if err != nil {
+		d.log.Error(fmt.Sprintf("fail to log fetch.package.registry.%s:%s.succeeded metric", pkgName, pkgVersion))
+	}
 	cSucceed.Inc(47)
 	return &npmDep, nil
 }
