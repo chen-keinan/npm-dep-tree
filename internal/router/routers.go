@@ -29,9 +29,9 @@ func (r MuxRouter) RegisterRoutes(zlog *zap.Logger, depService service.Dep) *mux
 }
 
 //handlerBuilder build api routes
-func (r MuxRouter) handlerBuilder(router *mux.Router, dataIntegrityRoute routes.Routes) {
+func (r MuxRouter) handlerBuilder(router *mux.Router, dependenciesRouter routes.Routes) {
 	var allRoutes []routes.Routes
-	allRoutes = append(allRoutes, dataIntegrityRoute)
+	allRoutes = append(allRoutes, dependenciesRouter)
 	for _, api := range allRoutes {
 		for _, route := range api {
 			//@todo implement rate limit middleware and process req.in async via workers
