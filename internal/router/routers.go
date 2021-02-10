@@ -34,6 +34,7 @@ func (r MuxRouter) handlerBuilder(router *mux.Router, dataIntegrityRoute routes.
 	allRoutes = append(allRoutes, dataIntegrityRoute)
 	for _, api := range allRoutes {
 		for _, route := range api {
+			//@todo implement rate limit middleware and process req.in async via workers
 			handler := route.HandlerFunc
 			router.
 				Methods(route.Method).
