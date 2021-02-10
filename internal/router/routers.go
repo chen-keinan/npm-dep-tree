@@ -31,9 +31,9 @@ func (r MuxRouter) RegisterRoutes(zlog *zap.Logger, depService service.Dep, pr c
 }
 
 //handlerBuilder build api routes
-func (r MuxRouter) handlerBuilder(router *mux.Router, dataIntegrityRoute routes.Routes, pr chan middleware.RequestProcessor) {
+func (r MuxRouter) handlerBuilder(router *mux.Router, dependenciesRoute routes.Routes, pr chan middleware.RequestProcessor) {
 	var allRoutes []routes.Routes
-	allRoutes = append(allRoutes, dataIntegrityRoute)
+	allRoutes = append(allRoutes, dependenciesRoute)
 	for _, api := range allRoutes {
 		for _, route := range api {
 			var handler http.Handler
