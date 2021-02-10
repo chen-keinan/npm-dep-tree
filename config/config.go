@@ -17,11 +17,10 @@ type Config struct {
 func InitConfig(zlog *zap.Logger) *Config {
 	configFilePath := getConfigFilePath()
 	serviceConfig, err := readConfig(configFilePath)
-	serviceConfig.log = zlog
 	if err != nil {
 		panic(fmt.Errorf("failed to load configuration from folder %s", configFilePath))
 	}
-	serviceConfig.log.Info("Configuration loaded successfully")
+	zlog.Info("Configuration loaded successfully")
 	return serviceConfig
 }
 
