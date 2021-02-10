@@ -8,7 +8,9 @@ import (
 	"github.com/chen-keinan/npm-dep-tree/internal/handler"
 	"github.com/chen-keinan/npm-dep-tree/internal/logger"
 	"github.com/chen-keinan/npm-dep-tree/internal/router"
+	"github.com/chen-keinan/npm-dep-tree/internal/router/middleware"
 	"github.com/chen-keinan/npm-dep-tree/internal/service"
+	"github.com/chen-keinan/npm-dep-tree/internal/workers"
 	"github.com/cyberdelia/go-metrics-graphite"
 	"github.com/gorilla/mux"
 	"github.com/rcrowley/go-metrics"
@@ -32,7 +34,9 @@ func RunNpmDepService() {
 		fx.Provide(service.NewDependencies),
 		fx.Provide(handler.NewDependenciesHandler),
 		fx.Provide(handler.NewSystemHandler),
+		fx.Provide(middleware.NewRateLimitChan),
 		fx.Provide(router.NewMuxRouter().RegisterRoutes),
+		fx.Invoke(workers.NewWorkerDispatcher().InvokeProcessingWorkers),
 		fx.Invoke(runHTTPServer),
 	)
 	if err := app.Start(context.Background()); err != nil {
