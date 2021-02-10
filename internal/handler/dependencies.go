@@ -9,6 +9,7 @@ import (
 	"github.com/tufin/asciitree"
 	"go.uber.org/zap"
 	"net/http"
+	"strings"
 )
 
 //Dependencies handler object
@@ -24,8 +25,8 @@ func NewDependenciesHandler(zlog *zap.Logger, depService service.Dep) *Dependenc
 
 //ResolveDependencies handler by package name and version
 func (handler Dependencies) ResolveDependencies(w http.ResponseWriter, req *http.Request) {
-	name := mux.Vars(req)["name"]
-	version := mux.Vars(req)["version"]
+	name := strings.TrimSpace(mux.Vars(req)["name"])
+	version := strings.TrimSpace(mux.Vars(req)["version"])
 	if len(name) == 0 || len(version) == 0 {
 		handler.log.Error("name or version are missing from request")
 		w.WriteHeader(http.StatusBadRequest)
