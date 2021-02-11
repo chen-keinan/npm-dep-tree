@@ -68,6 +68,7 @@ func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*mod
 	})
 	t.Update(47)
 	if err != nil {
+		d.log.Error(err.Error())
 		return npmDep, err
 	}
 	d.log.Debug(fmt.Sprintf("resolving dependencies from registry for pkg name %s and version %s", pkgName, pkgVersion))
@@ -96,7 +97,7 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 		}
 	}()
 	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry")
+		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry for pakcage name %s and package version %s", pkgName, pkgVersion)
 	}
 	err = json.NewDecoder(resp.Body).Decode(&npmDep)
 	if err != nil {
