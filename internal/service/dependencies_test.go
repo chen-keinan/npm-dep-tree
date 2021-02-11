@@ -47,3 +47,9 @@ func Test_ResolveDependenciesFromCache(t *testing.T) {
 	assert.Equal(t, dt.Dependencies[0].Name, "lodash")
 	assert.Equal(t, dt.Dependencies[0].Version, "4.8.0")
 }
+
+func Test_ResolveDependenciesNonEscapedPkgName(t *testing.T) {
+	dt := &model.DependencyTree{Name: "async/test", Version: "2.0.1", Dependencies: []*model.DependencyTree{}}
+	err := d.ResolveDependencies(dt)
+	assert.Error(t, err)
+}
