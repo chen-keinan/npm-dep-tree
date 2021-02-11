@@ -95,6 +95,9 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 			d.log.Error("failed to close input steam")
 		}
 	}()
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry")
+	}
 	err = json.NewDecoder(resp.Body).Decode(&npmDep)
 	if err != nil {
 		err := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
