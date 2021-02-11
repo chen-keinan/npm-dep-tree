@@ -32,5 +32,5 @@ Latencies     [min, mean, 50, 90, 95, 99, max]  267.77µs, 156.715ms, 694.22µs,
 Bytes In      [total, mean]                     1182190, 472.88
 Bytes Out     [total, mean]                     0, 0.00
 Success       [ratio]                           100.00%
-Status Codes  [code:count]                      200:2500```
+Status Codes  [code:count]                      200:2500
 ```
