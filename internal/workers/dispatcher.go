@@ -21,7 +21,6 @@ func (wd WorkerDispatcher) Work(jobFunc func(msg middleware.RequestProcessor), p
 			select {
 			case msg := <-pr:
 				jobFunc(msg)
-				return
 			}
 		}
 	}()
