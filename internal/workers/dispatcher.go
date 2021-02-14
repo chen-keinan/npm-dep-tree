@@ -15,15 +15,10 @@ func NewWorkerDispatcher() *WorkerDispatcher {
 }
 
 //Work worker to invoke processing function and call designated handler
-func (wd WorkerDispatcher) Work(jobFunc func(msg middleware.RequestProcessor), pr chan middleware.RequestProcessor) {
-	go func() {
-		for {
-			select {
-			case msg := <-pr:
-				jobFunc(msg)
-			}
-		}
-	}()
+func (wd WorkerDispatcher) Work(jobFunc func(msg middleware.RequestProcessor), prChan chan middleware.RequestProcessor) {
+	for msg := range prChan {
+		jobFunc(msg)
+	}
 }
 
 //InvokeProcessingWorkers initiate 50 worker to process requests in async
