@@ -5,10 +5,7 @@ import (
 	"github.com/chen-keinan/npm-dep-tree/internal/router/middleware"
 	"github.com/chen-keinan/npm-dep-tree/internal/routes"
 	"github.com/chen-keinan/npm-dep-tree/internal/routing"
-	"github.com/chen-keinan/npm-dep-tree/internal/service"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
-	"net/http"
 )
 
 //MuxRouter data
@@ -23,9 +20,8 @@ func NewMuxRouter() MuxRouter {
 }
 
 //RegisterRoutes instantiate new router
-func (r MuxRouter) RegisterRoutes(zlog *zap.Logger, depService service.Dep, pr chan middleware.RequestProcessor) *mux.Router {
-	dependenciesRouter := &routing.DependenciesRoutes{DependenciesHandler: handler.NewDependenciesHandler(zlog, depService),
-		SystemHandler: handler.NewSystemHandler(zlog)}
+func (r MuxRouter) RegisterRoutes(dependencies *handler.Dependencies, system *handler.System, pr chan middleware.RequestProcessor) *mux.Router {
+	dependenciesRouter := &routing.DependenciesRoutes{DependenciesHandler: dependencies, SystemHandler: system}
 	r.handlerBuilder(r.router, dependenciesRouter.DepRoutes(), pr)
 	return r.router
 }
@@ -36,9 +32,7 @@ func (r MuxRouter) handlerBuilder(router *mux.Router, dependenciesRoute routes.R
 	allRoutes = append(allRoutes, dependenciesRoute)
 	for _, api := range allRoutes {
 		for _, route := range api {
-			var handler http.Handler
-			handler = route.HandlerFunc
-			handler = middleware.RequestLimitMiddleware(route.HandlerFunc, pr)
+			handler := middleware.RequestLimitMiddleware(route.HandlerFunc, pr)
 			router.
 				Methods(route.Method).
 				Path(route.Pattern).

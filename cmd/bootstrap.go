@@ -7,6 +7,7 @@ import (
 	"github.com/chen-keinan/npm-dep-tree/internal/cache"
 	"github.com/chen-keinan/npm-dep-tree/internal/handler"
 	"github.com/chen-keinan/npm-dep-tree/internal/logger"
+	"github.com/chen-keinan/npm-dep-tree/internal/nhttp"
 	"github.com/chen-keinan/npm-dep-tree/internal/router"
 	"github.com/chen-keinan/npm-dep-tree/internal/router/middleware"
 	"github.com/chen-keinan/npm-dep-tree/internal/service"
@@ -31,6 +32,7 @@ func RunNpmDepService() {
 		fx.Provide(logger.NewZapLogger),
 		fx.Provide(configs.InitConfig),
 		fx.Provide(cache.NewLru),
+		fx.Provide(nhttp.NewNpmHTTPClient),
 		fx.Provide(service.NewDependencies),
 		fx.Provide(handler.NewDependenciesHandler),
 		fx.Provide(handler.NewSystemHandler),

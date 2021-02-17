@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/chen-keinan/npm-dep-tree/internal/cache"
+	"github.com/chen-keinan/npm-dep-tree/internal/nhttp"
 	"github.com/chen-keinan/npm-dep-tree/pkg/model"
 	"github.com/rcrowley/go-metrics"
 	"go.uber.org/zap"
-	"net/http"
 	"strings"
 )
 
@@ -26,13 +26,14 @@ type Dep interface {
 
 //Dependencies service struct
 type Dependencies struct {
-	log *zap.Logger
-	lru *cache.Lru
+	log     *zap.Logger
+	lru     *cache.Lru
+	hclient nhttp.HClient
 }
 
 //NewDependencies create dependencies service instance
-func NewDependencies(zlog *zap.Logger, l *cache.Lru) Dep {
-	return &Dependencies{log: zlog, lru: l}
+func NewDependencies(zlog *zap.Logger, l *cache.Lru, client nhttp.HClient) Dep {
+	return &Dependencies{log: zlog, lru: l, hclient: client}
 }
 
 //ResolveDependencies resolve npm package dependency by name and version
@@ -80,20 +81,22 @@ func (d Dependencies) getNextDependency(pkgName string, pkgVersion string) (*mod
 func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*model.NpmDependency, error) {
 	cSucceed := metrics.NewCounter()
 	cFailure := metrics.NewCounter()
-	resp, err := http.Get(fmt.Sprintf("%s/%s/%s", NpmRegistry, pkgName, pkgVersion))
+	resp, err := d.hclient.Get(fmt.Sprintf("%s/%s/%s", NpmRegistry, pkgName, pkgVersion))
 	var npmDep model.NpmDependency
 	if err != nil {
-		err := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
-		if err != nil {
+		errFetch := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		if errFetch != nil {
 			d.log.Error(fmt.Sprintf("fail to log fetch.package.registry.%s:%s.failure metric", pkgName, pkgVersion))
 		}
 		cFailure.Inc(47)
 		return nil, fmt.Errorf("failed to fetch pakcge data from npm registry: %s", err.Error())
 	}
 	defer func() {
-		err := resp.Body.Close()
-		if err != nil {
-			d.log.Error("failed to close input steam")
+		if resp != nil && resp.Body != nil {
+			errBodyClose := resp.Body.Close()
+			if errBodyClose != nil {
+				d.log.Error("failed to close input steam")
+			}
 		}
 	}()
 	if resp.StatusCode >= 400 {
@@ -101,8 +104,8 @@ func (d Dependencies) fetchFromRegistry(pkgName string, pkgVersion string) (*mod
 	}
 	err = json.NewDecoder(resp.Body).Decode(&npmDep)
 	if err != nil {
-		err := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
-		if err != nil {
+		errFetch := metrics.Register(fmt.Sprintf("fetch.package.registry.%s:%s.failure", pkgName, pkgVersion), cFailure)
+		if errFetch != nil {
 			d.log.Error(fmt.Sprintf("fail to log fetch.package.registry.%s:%s.failure metric", pkgName, pkgVersion))
 		}
 		cFailure.Inc(47)

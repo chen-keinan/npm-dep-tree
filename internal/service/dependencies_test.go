@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/chen-keinan/npm-dep-tree/internal/cache"
 	"github.com/chen-keinan/npm-dep-tree/internal/logger"
+	"github.com/chen-keinan/npm-dep-tree/internal/nhttp"
 	"github.com/chen-keinan/npm-dep-tree/pkg/model"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -21,7 +22,7 @@ func TestMain(m *testing.M) {
 }
 
 func setUp() {
-	d = NewDependencies(logger.NewZapLogger(), cache.NewLru())
+	d = NewDependencies(logger.NewZapLogger(), cache.NewLru(), nhttp.NewNpmHTTPClient())
 }
 
 func Test_ResolveDependenciesAddToCache(t *testing.T) {

@@ -4,6 +4,7 @@ import (
 	"github.com/chen-keinan/npm-dep-tree/internal/cache"
 	"github.com/chen-keinan/npm-dep-tree/internal/common"
 	"github.com/chen-keinan/npm-dep-tree/internal/logger"
+	nhttp2 "github.com/chen-keinan/npm-dep-tree/internal/nhttp"
 	"github.com/chen-keinan/npm-dep-tree/internal/service"
 	"github.com/chen-keinan/npm-dep-tree/test"
 	"github.com/stretchr/testify/assert"
@@ -17,7 +18,8 @@ func Test_ResolveDependencies_OK(t *testing.T) {
 	req, err := http.NewRequest("GET", path.Join(common.API, "package-dependencies/async/2.0.1"), nil)
 	assert.NoError(t, err)
 	zapLogger := logger.NewZapLogger()
-	sh := NewDependenciesHandler(zapLogger, service.NewDependencies(zapLogger, cache.NewLru()))
+	nhttp := nhttp2.NewNpmHTTPClient()
+	sh := NewDependenciesHandler(zapLogger, service.NewDependencies(zapLogger, cache.NewLru(), nhttp))
 	presolveRes, err := test.InvokeRequestWithResponse(req, sh.ResolveDependencies, path.Join(common.API, "package-dependencies/{name}/{version}"))
 	assert.NoError(t, err)
 	assert.True(t, presolveRes.Code == http.StatusOK)
@@ -28,7 +30,8 @@ func Test_ResolveDependencies_BadRequest(t *testing.T) {
 	req, err := http.NewRequest("GET", path.Join(common.API, "package-dependencies/ / "), nil)
 	assert.NoError(t, err)
 	zapLogger := logger.NewZapLogger()
-	sh := NewDependenciesHandler(zapLogger, service.NewDependencies(zapLogger, cache.NewLru()))
+	nhttp := nhttp2.NewNpmHTTPClient()
+	sh := NewDependenciesHandler(zapLogger, service.NewDependencies(zapLogger, cache.NewLru(), nhttp))
 	presolveRes, err := test.InvokeRequestWithResponse(req, sh.ResolveDependencies, path.Join(common.API, "package-dependencies/{name}/{version}"))
 	assert.NoError(t, err)
 	assert.True(t, presolveRes.Code == http.StatusBadRequest)
