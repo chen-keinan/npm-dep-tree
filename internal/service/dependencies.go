@@ -6,9 +6,9 @@ import (
 	"github.com/chen-keinan/npm-dep-tree/internal/cache"
 	"github.com/chen-keinan/npm-dep-tree/internal/nhttp"
 	"github.com/chen-keinan/npm-dep-tree/pkg/model"
+	"github.com/chen-keinan/npm-dep-tree/pkg/utils"
 	"github.com/rcrowley/go-metrics"
 	"go.uber.org/zap"
-	"strings"
 )
 
 //NpmRegistry npm registry url
@@ -44,7 +44,7 @@ func (d Dependencies) ResolveDependencies(rootTree *model.DependencyTree) error 
 		return err
 	}
 	for name, version := range npmDep.Dependencies {
-		dep := &model.DependencyTree{Name: name, Version: strings.Trim(version, "^"), Dependencies: []*model.DependencyTree{}}
+		dep := &model.DependencyTree{Name: utils.EscapePackageName(name), Version: utils.TrimVersionSign(version), Dependencies: []*model.DependencyTree{}}
 		err := d.ResolveDependencies(dep)
 		if err == nil {
 			rootTree.Dependencies = append(rootTree.Dependencies, dep)
