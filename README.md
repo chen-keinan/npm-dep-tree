@@ -1,7 +1,6 @@
 # `npm package dependency resolver`
 
-This is an example project for high performance resolving npm package with it package-dependencies
-and print out it dependency tree
+High performance npm package dependencies resolver and print out it dependency tree
 
 ### Example : http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
 
