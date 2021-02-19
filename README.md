@@ -36,4 +36,4 @@ Status Codes  [code:count]                      200:2500
 ```
 
 #### Performance Plot
-<br><img src="./pkg/images/vegeta_plot.png" width="200" alt="vegeta performance plot"><br>
+<br><img src="./pkg/images/vegeta_plot.png" width="600" alt="vegeta performance plot"><br>
