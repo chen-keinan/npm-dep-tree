@@ -1,6 +1,6 @@
 # `npm package dependency resolver`
 
-This is an example project for resolving npm package with it package-dependencies
+This is an example project for high performance resolving npm package with it package-dependencies
 and print out it dependency tree
 
 ### Example : http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
@@ -24,7 +24,7 @@ and print out it dependency tree
         └ fast-json-stable-stringify:2.0.0
 ```
 
-#### Benchmark test
+#### Benchmark test (vegeta)
 ```
 Requests      [total, rate, throughput]         2500, 100.04, 100.04
 Duration      [total, attack, wait]             24.991s, 24.99s, 922.548µs
@@ -34,3 +34,6 @@ Bytes Out     [total, mean]                     0, 0.00
 Success       [ratio]                           100.00%
 Status Codes  [code:count]                      200:2500
 ```
+
+#### Performance Plot
+<br><img src="./pkg/images/vegeta_plot.png" width="200" alt="vegeta performance plot"><br>
