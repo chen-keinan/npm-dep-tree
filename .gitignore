@@ -11,4 +11,10 @@ cp.out
 vendor/
 */mocks*
 coverage.html
-*/gomock*
+a_startup-packr.go
+fmtcoverage.html
+coverage.md
+coverage.out
+kube-knark
+mock*
+*.iml
