@@ -2,14 +2,14 @@ package configs
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
+	"github.com/chen-keinan/go-simple-config/simple"
 	"go.uber.org/zap"
 	"os"
 )
 
 //Config wrapper for Viper (exposed to all project's packages)
 type Config struct {
-	*viper.Viper
+	*simple.Config
 }
 
 //InitConfig initializes the configuration for the service
@@ -24,7 +24,7 @@ func InitConfig(zlog *zap.Logger) *Config {
 }
 
 func getConfigFilePath() string {
-	path := "config/"
+	path := "./configs/config.json"
 	fs, err := os.Stat(path)
 	if err != nil || !fs.IsDir() {
 		panic(fmt.Sprintf("Error fetching conf file, %s is not a valid path", path))
@@ -33,9 +33,8 @@ func getConfigFilePath() string {
 }
 
 func readConfig(path string) (c *Config, err error) {
-	c = &Config{Viper: viper.New()}
-	c.AddConfigPath(path)
-	if err = c.ReadInConfig(); err != nil {
+	c = &Config{Config: simple.New()}
+	if err = c.Load(path); err != nil {
 		return c, err
 	}
 	return c, err
@@ -43,5 +42,5 @@ func readConfig(path string) (c *Config, err error) {
 
 //GetStringValue returns the string value of the given configuration key
 func (c Config) GetStringValue(key string) string {
-	return c.GetString(key)
+	return c.Config.GetStringValue(key)
 }
