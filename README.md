@@ -1,10 +1,20 @@
-# `npm package dependency resolver`
+[![Go Report Card](https://goreportcard.com/badge/github.com/chen-keinan/npm-dep-tree)](https://goreportcard.com/report/github.com/chen-keinan/npm-dep-tree)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/chen-keinan/beacon/blob/main/LICENSE)
+<img src="./pkg/images/coverage_badge.png" alt="test coverage badge">
+[![Gitter](https://badges.gitter.im/beacon-sec/community.svg)](https://gitter.im/beacon-sec/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+# npm package dependency resolver
 
 High performance npm package dependencies resolver and print out it dependency tree
 
-### Example : http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
+* [Usage](#Usage)
+* [Benchmark](#benchmark)
+* [Performance Plot](#performance-plot)
+
+## Usage
 
 ```
+curl http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
+
 └ file-loader:6.2.0
     ├ loader-utils:2.0.0
     │ ├ big.js:5.2.2
@@ -23,7 +33,7 @@ High performance npm package dependencies resolver and print out it dependency t
         └ fast-json-stable-stringify:2.0.0
 ```
 
-#### Benchmark test (vegeta)
+### Benchmark
 ```
 Requests      [total, rate, throughput]         2500, 100.04, 100.04
 Duration      [total, attack, wait]             24.991s, 24.99s, 922.548µs
@@ -34,5 +44,5 @@ Success       [ratio]                           100.00%
 Status Codes  [code:count]                      200:2500
 ```
 
-#### Performance Plot
+### Performance Plot
 <br><img src="./pkg/images/vegeta_plot.png" width="800" alt="vegeta performance plot"><br>
