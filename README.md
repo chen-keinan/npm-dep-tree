@@ -6,12 +6,19 @@
 
 High performance npm package dependencies resolver and print out it dependency tree
 
+* [Installation](#installation)
 * [Usage](#Usage)
 * [Benchmark](#benchmark)
 * [Performance Plot](#performance-plot)
 
-## Usage
+## Installation
+```
+# git clone git@github.com:chen-keinan/npm-dep-tree.git
+# make build
+#./npm-dep-tree
+```
 
+## Usage
 ```
 curl http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
 
