@@ -2,6 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/chen-keinan/beacon/blob/main/LICENSE)
 <img src="./pkg/images/coverage_badge.png" alt="test coverage badge">
 [![Gitter](https://badges.gitter.im/beacon-sec/community.svg)](https://gitter.im/beacon-sec/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 # npm package dependency resolver
 
 High performance npm package dependencies resolver and print out it dependency tree
@@ -12,6 +13,7 @@ High performance npm package dependencies resolver and print out it dependency t
 * [Performance Plot](#performance-plot)
 
 ## Installation
+
 ```
 # git clone git@github.com:chen-keinan/npm-dep-tree.git
 # make build
@@ -19,6 +21,7 @@ High performance npm package dependencies resolver and print out it dependency t
 ```
 
 ## Usage
+
 ```
 curl http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
 
@@ -41,6 +44,7 @@ curl http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
 ```
 
 ### Benchmark
+
 ```
 Requests      [total, rate, throughput]         2500, 100.04, 100.04
 Duration      [total, attack, wait]             24.991s, 24.99s, 922.548µs
@@ -52,4 +56,5 @@ Status Codes  [code:count]                      200:2500
 ```
 
 ### Performance Plot
+
 <br><img src="./pkg/images/vegeta_plot.png" width="800" alt="vegeta performance plot"><br>
