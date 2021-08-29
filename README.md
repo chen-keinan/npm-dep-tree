@@ -15,7 +15,7 @@ High performance npm package dependencies resolver and print out it dependency t
 
 ## Installation
 
-```
+```shell
 # git clone git@github.com:chen-keinan/npm-dep-tree.git
 # make build
 #./npm-dep-tree
@@ -23,7 +23,7 @@ High performance npm package dependencies resolver and print out it dependency t
 
 ## Usage
 
-```
+```shell
 curl http://localhost:8085/api/v1/package-dependencies/file-loader/6.2.0
 
 └ file-loader:6.2.0
