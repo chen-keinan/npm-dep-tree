@@ -49,7 +49,7 @@ func RunNpmDepService() {
 // start http server
 func runHTTPServer(lifecycle fx.Lifecycle, routes *mux.Router, c *configs.Config, zlog *zap.Logger) {
 	lifecycle.Append(fx.Hook{OnStart: func(context.Context) error {
-		httpPort := ":" + c.GetStringValue("HttpPort")
+		httpPort := ":" + c.GetStringValue("httpPort")
 		zlog.Info(fmt.Sprintf("HTTP port: %s", httpPort))
 		srv := &http.Server{
 			ReadTimeout:  30 * time.Second,

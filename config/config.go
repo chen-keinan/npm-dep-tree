@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	"fmt"
@@ -24,9 +24,9 @@ func InitConfig(zlog *zap.Logger) *Config {
 }
 
 func getConfigFilePath() string {
-	path := "./configs/config.json"
-	fs, err := os.Stat(path)
-	if err != nil || !fs.IsDir() {
+	path := "./config/config.json"
+	_, err := os.Stat(path)
+	if err != nil {
 		panic(fmt.Sprintf("Error fetching conf file, %s is not a valid path", path))
 	}
 	return path
