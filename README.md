@@ -56,6 +56,6 @@ Success       [ratio]                           100.00%
 Status Codes  [code:count]                      200:2500
 ```
 
-### Performance Plot
+### Vegeta Performance Plot
 
 <br><img src="./pkg/images/vegeta_plot.png" width="800" alt="vegeta performance plot"><br>
