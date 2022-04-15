@@ -28,6 +28,6 @@ test:
 build:
 	export PATH=$GOPATH/bin:$PATH;
 	export PATH=$PATH:/home/root/go/bin
-	GOOS=linux GOARCH=amd64 $(GOBUILD) -v
+	GOOS=linux GOARCH=amd64 $(GOBUILD) main.go
 
 .PHONY: install-req fmt lint tidy test imports .
