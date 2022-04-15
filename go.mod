@@ -11,6 +11,6 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
 	github.com/stretchr/testify v1.7.1
 	github.com/tufin/asciitree v0.0.0-20210127111056-bf70173ef677
-	go.uber.org/fx v1.13.1
+	go.uber.org/fx v1.17.1
 	go.uber.org/zap v1.21.0
 )
