@@ -1,32 +1,33 @@
 SHELL := /bin/bash
 
 GOCMD=go
+GOMOCKS=$(GOCMD) generate ./...
 GOMOD=$(GOCMD) mod
-GOBUILD=$(GOCMD) build
-GOLINT=${GOPATH}/bin/golangci-lint
-GORELEASER=/usr/local/bin/goreleaser
-GOIMPI=${GOPATH}/bin/impi
 GOTEST=$(GOCMD) test
 
+
 all:
-	$(info  "completed running make file for npm dependency resolver")
+	$(info  "completed running make file for npm-dep-tree")
 fmt:
 	@go fmt ./...
 lint:
+	$(GOCMD) get -d github.com/golang/mock/mockgen@v1.6.0
+	$(GOCMD) install -v github.com/golang/mock/mockgen
+	export PATH=$HOME/go/bin:$PATH
+	$(GOMOCKS)
 	./lint.sh
 tidy:
 	$(GOMOD) tidy -v
 test:
-	@go get github.com/golang/mock/mockgen@latest
-	@go install -v github.com/golang/mock/mockgen && export PATH=$GOPATH/bin:$PATH;
-	@go generate ./...
-	$(GOTEST) ./... -coverprofile cp.out
+	$(GOCMD) get -d github.com/golang/mock/mockgen@v1.6.0
+	$(GOCMD) install -v github.com/golang/mock/mockgen && export PATH=$GOPATH/bin:$PATH;
+	$(GOMOCKS)
+	$(GOTEST) ./... -coverprofile coverage.md fmt
+	$(GOCMD) tool cover -html=coverage.md -o coverage.html
+	$(GOCMD) tool cover  -func coverage.md
 build:
-	$(GOBUILD) -v
+	export PATH=$GOPATH/bin:$PATH;
+	export PATH=$PATH:/home/root/go/bin
+	GOOS=linux GOARCH=amd64 $(GOBUILD) -v
 
-build_docker:
-	docker build -t gcr.io/snyk-main/homebase-upstream-consumer:${CIRCLE_SHA1} .
-	docker push gcr.io/snyk-main/homebase-upstream-consumer:${CIRCLE_SHA1}
-
-
-.PHONY: install-req fmt test lint build ci build-binaries tidy imports
+.PHONY: install-req fmt lint tidy test imports .
