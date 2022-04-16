@@ -1,6 +1,6 @@
 module github.com/chen-keinan/npm-dep-tree
 
-go 1.14
+go 1.17
 
 require (
 	github.com/chen-keinan/go-simple-config v0.0.0-20210527075145-1b0dce0f349b
@@ -13,4 +13,17 @@ require (
 	github.com/tufin/asciitree v0.0.0-20210127111056-bf70173ef677
 	go.uber.org/fx v1.17.1
 	go.uber.org/zap v1.21.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/dig v1.14.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
+	golang.org/x/mod v0.4.2 // indirect
+	golang.org/x/sys v0.0.0-20210903071746-97244b99971b // indirect
+	golang.org/x/tools v0.1.5 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
