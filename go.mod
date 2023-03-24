@@ -3,7 +3,7 @@ module github.com/chen-keinan/npm-dep-tree
 go 1.17
 
 require (
-	github.com/chen-keinan/go-simple-config v0.0.0-20210527075145-1b0dce0f349b
+	github.com/chen-keinan/go-simple-config v1.1.0
 	github.com/cyberdelia/go-metrics-graphite v0.0.0-20161219230853-39f87cc3b432
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0

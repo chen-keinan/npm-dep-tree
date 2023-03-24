@@ -2,8 +2,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/benbjohnson/clock v1.3.0 h1:ip6w0uFQkncKQ979AypyG0ER7mqUSBdKLOgAle/AT8A=
 github.com/benbjohnson/clock v1.3.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
-github.com/chen-keinan/go-simple-config v0.0.0-20210527075145-1b0dce0f349b h1:oCAveYGOzxQVaxyqZjjYuPEA3IILNZd5Y1OcBwxwd8M=
-github.com/chen-keinan/go-simple-config v0.0.0-20210527075145-1b0dce0f349b/go.mod h1:w8Z4O4qNpI5UMJ4WPziasgI2EfNBd1666v0CfUV2/fs=
+github.com/chen-keinan/go-simple-config v1.1.0 h1:5ZhdQnlGJhYGdOiQ/5pTTbXChzFQrnk5KeP5Ii1/jpU=
+github.com/chen-keinan/go-simple-config v1.1.0/go.mod h1:KI/8ocXEq2cHvfN8K0bRuGaUOvsBkg64T1QqMRgTtr4=
 github.com/cyberdelia/go-metrics-graphite v0.0.0-20161219230853-39f87cc3b432 h1:M5QgkYacWj0Xs8MhpIK/5uwU02icXpEoSo9sM2aRCps=
 github.com/cyberdelia/go-metrics-graphite v0.0.0-20161219230853-39f87cc3b432/go.mod h1:xwIwAxMvYnVrGJPe2FKx5prTrnAjGOD8zvDOnxnrrkM=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
